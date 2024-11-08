@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONL File Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">JSONL File Generator for Fine-Tuning</h1>
+
+        <!-- Language Selector -->
+        <label for="languageSelector">Language:</label>
+        <select id="languageSelector">
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+            <option value="es">Español</option>
+            <option value="hi">हिंदी</option>
+        </select>
+
+        <div id="form">
+            <label for="systemContent" id="systemContentLabel">System Content</label>
+            <input type="text" id="systemContent" placeholder="E.g., You are a dental clinic assistant.">
+            
+            <label for="userContent" id="userContentLabel">User Message</label>
+            <input type="text" id="userContent" placeholder="Enter the user's question here.">
+            
+            <label for="assistantContent" id="assistantContentLabel">Assistant's Response</label>
+            <input type="text" id="assistantContent" placeholder="Enter the assistant's response here.">
+            
+            <button id="addMessage">Add to JSONL</button>
+            <button id="clearCache">Delete Cache</button>
+        </div>
+
+        <div class="output">
+            <h2 id="previewTitle">JSONL Preview</h2>
+            <pre id="jsonlPreview"></pre>
+            <button id="downloadJsonl">Download JSONL</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
