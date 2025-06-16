@@ -1,12 +1,15 @@
 # JSONL File Generator for Fine-Tuning with Language Support
 
-This is a simple web application that allows users to create JSONL files for fine-tuning OpenAI's GPT models. The application includes fields for entering "System", "User", and "Assistant" messages, stores data in the browser's local storage to prevent data loss on refresh, and supports multiple languages (English, Portuguese, Spanish, and Hindi). Users can download the generated JSONL file directly from the app.
+This is a FORK from https://github.com/iagolirapasssos/JSONL-File-Generator that drops the System message, and that adds the batch creation function from JSON files. Ideal if you want to generate a JSONL file for fine tuning a JSON Generator.
+
+This is a simple web application that allows users to create JSONL files for fine-tuning OpenAI's GPT models. The application includes fields for entering "User", and "Assistant" messages, stores data in the browser's local storage to prevent data loss on refresh, and supports multiple languages (English, Portuguese, Spanish, and Hindi). Users can download the generated JSONL file directly from the app.
 
 ![Screenshot of the JSONL File Generator](screenshot.png)
 
 ## Features
 
-- **Easy JSONL Creation**: Provides structured fields for entering system context, user messages, and assistant responses.
+- **Easy JSONL Creation**: Provides structured fields for entering user messages, and assistant responses.
+- **Batch create from JSON Files**: Allows you to create user message and responses in batch from JSON files. 
 - **Downloadable File**: Creates a JSONL format file for OpenAI's fine-tuning, which can be downloaded with one click.
 - **Local Storage Support**: Retains input data in local storage to avoid data loss on page refresh.
 - **Multilingual Support**: Interface available in English, Portuguese, Spanish, and Hindi.
@@ -46,8 +49,8 @@ This is a simple web application that allows users to create JSONL files for fin
 Here's an example of the generated JSONL format:
 
 ```jsonl
-{"messages": [{"role": "system", "content": "You are a dental assistant bot."}, {"role": "user", "content": "What are the clinic hours?"}, {"role": "assistant", "content": "Our clinic is open from 8 AM to 6 PM, Monday to Friday."}]}
-{"messages": [{"role": "system", "content": "You are a dental assistant bot."}, {"role": "user", "content": "How can I book an appointment?"}, {"role": "assistant", "content": "You can book an appointment by calling us or through our website."}]}
+{"messages": [{"role": "user", "content": "What are the clinic hours?"}, {"role": "assistant", "content": "Our clinic is open from 8 AM to 6 PM, Monday to Friday."}]}
+{"messages": [{"role": "user", "content": "How can I book an appointment?"}, {"role": "assistant", "content": "You can book an appointment by calling us or through our website."}]}
 ```
 
 ## Customization
