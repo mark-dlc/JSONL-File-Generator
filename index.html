@@ -25,13 +25,15 @@
             
             <label for="assistantContent" id="assistantContentLabel">Assistant's Response</label>
             <textarea id="assistantContent" placeholder="Enter the assistant's response here or upload JSON files below."></textarea>
+          
             
+            <button id="addMessage">Add to JSONL</button>
+
             <label for="jsonFileInput" id="jsonFileLabel">Upload JSON Files (Optional)</label>
             <input type="file" id="jsonFileInput" accept=".json" class="file-input" multiple>
             <div id="jsonFileStatus" class="file-status"></div>
-            
-            <button id="addMessage">Add to JSONL</button>
             <button id="processJsonFiles">Process JSON Files</button>
+
             <button id="clearCache">Delete Cache</button>
         </div>
 
