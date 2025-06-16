@@ -20,14 +20,15 @@
         </select>
 
         <div id="form">
-            <label for="systemContent" id="systemContentLabel">System Content</label>
-            <input type="text" id="systemContent" placeholder="E.g., You are a dental clinic assistant.">
-            
             <label for="userContent" id="userContentLabel">User Message</label>
             <input type="text" id="userContent" placeholder="Enter the user's question here.">
             
             <label for="assistantContent" id="assistantContentLabel">Assistant's Response</label>
-            <input type="text" id="assistantContent" placeholder="Enter the assistant's response here.">
+            <textarea id="assistantContent" placeholder="Enter the assistant's response here or upload a JSON file below."></textarea>
+            
+            <label for="jsonFileInput" id="jsonFileLabel">Upload JSON File (Optional)</label>
+            <input type="file" id="jsonFileInput" accept=".json" class="file-input">
+            <div id="jsonFileStatus" class="file-status"></div>
             
             <button id="addMessage">Add to JSONL</button>
             <button id="clearCache">Delete Cache</button>
@@ -42,4 +43,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
