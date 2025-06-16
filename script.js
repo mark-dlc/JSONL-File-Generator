@@ -3,7 +3,7 @@ const previewElement = document.getElementById('jsonlPreview');
 const languageSelector = document.getElementById('languageSelector');
 const jsonFileInput = document.getElementById('jsonFileInput');
 const jsonFileStatus = document.getElementById('jsonFileStatus');
-let uploadedJsonData = null;
+let uploadedJsonFiles = [];
 
 // Update preview with current local storage content
 updatePreview();
@@ -15,41 +15,94 @@ function saveToLocalStorage() {
 
 // Function to handle JSON file upload
 jsonFileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (!file) {
-        uploadedJsonData = null;
+    const files = Array.from(event.target.files);
+    uploadedJsonFiles = [];
+    
+    if (files.length === 0) {
         jsonFileStatus.textContent = '';
         return;
     }
 
-    if (file.type !== 'application/json') {
-        jsonFileStatus.textContent = 'Please select a valid JSON file.';
-        jsonFileStatus.className = 'file-status error';
-        uploadedJsonData = null;
+    let processedFiles = 0;
+    let validFiles = 0;
+    let errorFiles = [];
+
+    files.forEach((file, index) => {
+        if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+            errorFiles.push(file.name);
+            processedFiles++;
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const jsonData = JSON.parse(e.target.result);
+                const fileName = file.name.replace('.json', ''); // Remove .json extension
+                
+                uploadedJsonFiles.push({
+                    fileName: fileName,
+                    content: typeof jsonData === 'string' ? jsonData : JSON.stringify(jsonData, null, 2)
+                });
+                
+                validFiles++;
+            } catch (error) {
+                errorFiles.push(file.name);
+            }
+            
+            processedFiles++;
+            
+            // Update status when all files are processed
+            if (processedFiles === files.length) {
+                updateFileStatus(validFiles, errorFiles);
+            }
+        };
+        reader.readAsText(file);
+    });
+});
+
+function updateFileStatus(validFiles, errorFiles) {
+    let statusText = '';
+    let statusClass = '';
+    
+    if (validFiles > 0) {
+        statusText += `${validFiles} JSON file(s) loaded successfully. `;
+        statusClass = 'success';
+    }
+    
+    if (errorFiles.length > 0) {
+        statusText += `Error loading: ${errorFiles.join(', ')}`;
+        statusClass = errorFiles.length === uploadedJsonFiles.length + errorFiles.length ? 'error' : 'warning';
+    }
+    
+    jsonFileStatus.textContent = statusText;
+    jsonFileStatus.className = `file-status ${statusClass}`;
+}
+
+// Function to process uploaded JSON files
+document.getElementById('processJsonFiles').addEventListener('click', () => {
+    if (uploadedJsonFiles.length === 0) {
+        alert('No JSON files uploaded. Please select JSON files first.');
         return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            uploadedJsonData = JSON.parse(e.target.result);
-            jsonFileStatus.textContent = `JSON file loaded successfully (${file.name})`;
-            jsonFileStatus.className = 'file-status success';
-            
-            // If the JSON data is a string, use it as the assistant content
-            if (typeof uploadedJsonData === 'string') {
-                document.getElementById('assistantContent').value = uploadedJsonData;
-            } else {
-                // If it's an object, stringify it for the assistant content
-                document.getElementById('assistantContent').value = JSON.stringify(uploadedJsonData, null, 2);
-            }
-        } catch (error) {
-            jsonFileStatus.textContent = 'Invalid JSON file format.';
-            jsonFileStatus.className = 'file-status error';
-            uploadedJsonData = null;
-        }
-    };
-    reader.readAsText(file);
+    uploadedJsonFiles.forEach(fileData => {
+        messages.push({
+            messages: [
+                { role: "user", content: fileData.fileName },
+                { role: "assistant", content: fileData.content }
+            ]
+        });
+    });
+
+    // Save to local storage and clear uploaded files
+    saveToLocalStorage();
+    uploadedJsonFiles = [];
+    jsonFileInput.value = '';
+    jsonFileStatus.textContent = '';
+    
+    updatePreview();
+    alert(`${uploadedJsonFiles.length} entries added from JSON files.`);
 });
 
 // Function to add message to array
@@ -74,11 +127,6 @@ document.getElementById('addMessage').addEventListener('click', () => {
     saveToLocalStorage();
     document.getElementById('userContent').value = '';
     document.getElementById('assistantContent').value = '';
-    
-    // Clear file input and status
-    jsonFileInput.value = '';
-    jsonFileStatus.textContent = '';
-    uploadedJsonData = null;
     
     updatePreview();
 });
@@ -119,37 +167,37 @@ languageSelector.addEventListener('change', () => {
             title: "JSONL File Generator for Fine-Tuning",
             userContentLabel: "User Message",
             assistantContentLabel: "Assistant's Response",
-            jsonFileLabel: "Upload JSON File (Optional)",
+            jsonFileLabel: "Upload JSON Files (Optional)",
             previewTitle: "JSONL Preview",
             placeholderUser: "Enter the user's question here.",
-            placeholderAssistant: "Enter the assistant's response here or upload a JSON file below."
+            placeholderAssistant: "Enter the assistant's response here or upload JSON files below."
         },
         pt: {
             title: "Gerador de Arquivo JSONL para Fine-Tuning",
             userContentLabel: "Mensagem do Usuário",
             assistantContentLabel: "Resposta do Assistente",
-            jsonFileLabel: "Carregar Arquivo JSON (Opcional)",
+            jsonFileLabel: "Carregar Arquivos JSON (Opcional)",
             previewTitle: "Pré-visualização do JSONL",
             placeholderUser: "Digite a pergunta do usuário.",
-            placeholderAssistant: "Digite a resposta do assistente ou carregue um arquivo JSON abaixo."
+            placeholderAssistant: "Digite a resposta do assistente ou carregue arquivos JSON abaixo."
         },
         es: {
             title: "Generador de Archivo JSONL para Fine-Tuning",
             userContentLabel: "Mensaje del Usuario",
             assistantContentLabel: "Respuesta del Asistente",
-            jsonFileLabel: "Subir Archivo JSON (Opcional)",
+            jsonFileLabel: "Subir Archivos JSON (Opcional)",
             previewTitle: "Vista Previa de JSONL",
             placeholderUser: "Escribe la pregunta del usuario.",
-            placeholderAssistant: "Escribe la respuesta del asistente o sube un archivo JSON abajo."
+            placeholderAssistant: "Escribe la respuesta del asistente o sube archivos JSON abajo."
         },
         hi: {
             title: "फाइन-ट्यूनिंग के लिए JSONL फ़ाइल जनरेटर",
             userContentLabel: "उपयोगकर्ता संदेश",
             assistantContentLabel: "सहायक की प्रतिक्रिया",
-            jsonFileLabel: "JSON फ़ाइल अपलोड करें (वैकल्पिक)",
+            jsonFileLabel: "JSON फ़ाइलें अपलोड करें (वैकल्पिक)",
             previewTitle: "JSONL पूर्वावलोकन",
             placeholderUser: "उपयोगकर्ता का प्रश्न यहाँ लिखें।",
-            placeholderAssistant: "सहायक की प्रतिक्रिया यहाँ लिखें या नीचे JSON फ़ाइल अपलोड करें।"
+            placeholderAssistant: "सहायक की प्रतिक्रिया यहाँ लिखें या नीचे JSON फ़ाइलें अपलोड करें।"
         }
     };
 

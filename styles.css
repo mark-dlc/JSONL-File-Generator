@@ -105,6 +105,12 @@ textarea {
     border: 1px solid #f5c6cb;
 }
 
+.file-status.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+}
+
 /* Buttons */
 button {
     width: 100%;
@@ -121,6 +127,10 @@ button {
 
 button#clearCache {
     background-color: #ff4c4c;
+}
+
+button#processJsonFiles {
+    background-color: #28a745;
 }
 
 button:hover {
